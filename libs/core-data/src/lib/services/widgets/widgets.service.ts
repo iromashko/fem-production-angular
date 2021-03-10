@@ -1,42 +1,35 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Widget } from '@fem/api-interfaces';
+import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 
-import { environment } from 'apps/dashboard/src/environments/environment';
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class WidgetsService {
-  model = 'widgets';
+  mockWidgets: Widget[] = [
+    { id: '1', title: 'Nest Widget 01', description: 'This is a Nest widget' },
+    { id: '2', title: 'Nest Widget 02', description: 'This is a Nest widget' },
+    { id: '3', title: 'Nest Widget 03', description: 'This is a Nest widget' },
+  ];
 
-  constructor(private http: HttpClient) {}
-
-  all() {
-    return this.http.get<Widget[]>(this.getUrl());
+  findAll() {
+    return this.mockWidgets;
   }
 
-  find(id: string) {
-    return this.http.get<Widget[]>(this.getUrlWithId(id));
+  findOne(id: string) {
+    return this.mockWidgets.find((widget) => widget.id === id);
   }
 
   create(widget: Widget) {
-    return this.http.post(this.getUrl(), widget);
+    this.mockWidgets = [...this.mockWidgets, Object.assign({}, widget, { id: uuidv4() })];
+    return this.mockWidgets;
   }
 
-  update(widget: Widget) {
-    return this.http.put(this.getUrlWithId(widget.id), widget);
+  update(id: string, widget: Widget) {
+    this.mockWidgets = this.mockWidgets.map((w) => (w.id === id ? widget : w));
+    return this.mockWidgets;
   }
 
-  delete(widget: Widget) {
-    return this.http.delete(this.getUrlWithId(widget.id));
-  }
-
-  private getUrl() {
-    return `${environment.apiEndpoint}/${this.model}`;
-  }
-
-  private getUrlWithId(id) {
-    return `${this.getUrl()}/${id}`;
+  remove(id: string) {
+    this.mockWidgets = this.mockWidgets.filter((widget) => widget.id !== id);
+    return this.mockWidgets;
   }
 }
