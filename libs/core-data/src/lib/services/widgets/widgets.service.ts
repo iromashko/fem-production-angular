@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Widget } from '@fem/api-interfaces';
 
-const API_ENDPOINT = 'http://localhost:3000';
+import { environment } from 'apps/dashboard/src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,7 @@ export class WidgetsService {
   }
 
   private getUrl() {
-    return `${API_ENDPOINT}/${this.model}`;
+    return `${environment.apiEndpoint}/${this.model}`;
   }
 
   private getUrlWithId(id) {
